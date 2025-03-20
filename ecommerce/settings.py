@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-jd5f@vcm#bu*@fxsb@o!eoi0!*&(9+1hc$k8b5&!^kck+@yi7q
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['two0ecommercedronemodel.onrender.com', '127.0.0.1', 'localhost','*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -51,6 +51,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line
+    
+    
+
+
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
