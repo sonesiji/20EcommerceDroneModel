@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-jd5f@vcm#bu*@fxsb@o!eoi0!*&(9+1hc$k8b5&!^kck+@yi7q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+
+ALLOWED_HOSTS = ['two0ecommercedronemodel.onrender.com', '127.0.0.1', 'localhost','*']
 
 
 # Application definition
