@@ -1,0 +1,16 @@
+<!-- rental_product_list.html -->
+<h1>Available Rental Drones</h1>
+<ul>
+    {% for product in rental_products %}
+        <li>
+            <h2>{{ product.product.name }}</h2>
+            <p>Description: {{ product.product.description }}</p>
+            <p>Hourly Rate: {{ product.hourly_rate }}</p>
+            <p>Daily Rate: {{ product.daily_rate }}</p>
+            <p>Security Deposit: {{ product.security_deposit }}</p>
+            <p>Rental Terms: {{ product.rental_terms }}</p>
+            <p>Status: {% if product.is_available %}Available{% else %}Not Available{% endif %}</p>
+            <a href="{% url 'rental_booking' product.id %}">Book Now</a>
+        </li>
+    {% endfor %}
+</ul>

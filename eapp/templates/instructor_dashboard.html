@@ -1,0 +1,35 @@
+
+{% block content %}
+  <h2>Instructor Dashboard</h2>
+
+  <h3>User Bookings</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Drone Details</th>
+        <th>Slot</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in user_bookings %}
+        <tr>
+          <td>{{ booking.name }}</td>
+          <td>{{ booking.email }}</td>
+          <td>{{ booking.phone_number }}</td>
+          <td>{{ booking.drone_details }}</td>
+          <td>{{ booking.slot.date }} {{ booking.slot.time }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Add a Booking Slot</h3>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Slot</button>
+  </form>
+{% endblock %}

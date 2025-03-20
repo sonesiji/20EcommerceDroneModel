@@ -1,0 +1,443 @@
+{% extends 'base.html' %} 
+{% block content %} 
+{% load static %}
+
+<style>
+  #chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    text-align: center;
+  }
+
+  #chatbot-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+  }
+
+  .chatbot-options {
+    display: none;
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+  }
+
+  .chatbot-options a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    padding: 8px;
+  }
+
+  .chatbot-options a:hover {
+    background-color: #f1f1f1;
+  }
+  #cart-button {
+    border: none;
+    background-color: #fcfcfc; /* Base color */
+    color: rgb(0, 0, 0);
+    padding: 15px; /* Adjust padding for better proportions */
+    border-radius: 50%; /* Perfect circle */
+    font-size: 22px; /* Slightly larger font for emphasis */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transitions for all properties */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #chatbot-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #002752, #0056b3);
+    color: white;
+    border-radius: 50%;
+    width: 85px;
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    cursor: pointer;
+    box-shadow: 0px 0px 12px rgba(0, 102, 255, 0.6);
+    transition: all 0.3s ease-in-out;
+    animation: pulse 2s infinite;
+    position: relative;
+  }
+
+  #chatbot-icon:hover {
+    background: linear-gradient(135deg, #001f40, #003580);
+    transform: scale(1.2);
+    box-shadow: 0px 0px 20px rgba(0, 102, 255, 1);
+  }
+
+  .lucide {
+    width: 55px;
+    height: 55px;
+    stroke-width: 2;
+  }
+
+  /* Speech Bubble Effect */
+  #chatbot-icon::after {
+    content: "Let's Chat!";
+    position: absolute;
+    bottom: 110%;
+    background: white;
+    color: #003580;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+  }
+
+  #chatbot-icon:hover::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Pulsing Animation */
+  @keyframes pulse {
+    0% { box-shadow: 0px 0px 12px rgba(0, 102, 255, 0.6); }
+    50% { box-shadow: 0px 0px 20px rgba(0, 102, 255, 0.8); }
+    100% { box-shadow: 0px 0px 12px rgba(0, 102, 255, 0.6); }
+  }
+
+  #cart-button:hover {
+    background-color: #fe4536; /* Highlighted color on hover */
+    color: #ffffff; /* Change text color on hover */
+    box-shadow: 0px 8px 15px rgba(254, 69, 54, 0.4); /* Enhanced shadow on hover */
+    transform: scale(1.1); /* Slight zoom effect */
+  }
+
+  .moving-rainbow-text {
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    background-size: 400%; /* Expand the gradient for smoother transitions */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbowMove 5s linear infinite; /* Smooth movement of colors */
+  }
+
+  @keyframes rainbowMove {
+    0% { background-position: 0%; }
+    100% { background-position: 100%; }
+  }
+
+  #chatbot-icon {
+    position: fixed;
+    bottom: 30px; /* Adjust position */
+    right: 30px; /* Adjust position */
+    background-color: #007bff; /* Primary color */
+    color: white;
+    width: 60px; /* Icon button size */
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth hover effect */
+    z-index: 1000; /* Ensure it's above other elements */
+  }
+
+  #chatbot-icon:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    transform: scale(1.1); /* Slight zoom effect */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4); /* Enhanced shadow */
+  }
+
+  #chatbot-icon i {
+    font-size: 24px; /* Icon size */
+  }
+</style>
+
+<!-- slider-area start -->
+<section class="slider-area pos-relative">
+  <div class="slider-active">
+    <div
+      class="single-slider slide-1-style slide-height-2 slide-height-4 d-flex align-items-center"
+      data-background="{% static 'img/slider/drone1.jpg' %}"
+    >
+      <div class="shape-title shape-title-4 bounce-animate">
+        <h2>2025</h2>
+      </div>
+      <div class="shape-icon shape-icon-4 bounce-animate">
+        <img src="{% static 'img/slider/shape-icon-2.png' %}" alt="" />
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="slide-content slide-content-4 text-center pt-40">
+              <h1 data-animation="fadeInUp" data-delay=".3s" class="moving-rainbow-text">Welcome</h1>
+
+              <div class="slide-btn">
+                <a
+  class="btn interactive-btn"
+  href="{% url 'product_list' %}"
+  style="
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  "
+  onmouseover="this.style.background='linear-gradient(90deg, #0056b3, #007bff)'; this.style.transform='scale(1.1)'; this.querySelector('.shine').style.left='100%';"
+  onmouseout="this.style.background='linear-gradient(90deg, #007bff, #0056b3)'; this.style.transform='scale(1)'; this.querySelector('.shine').style.left='-100%';"
+  data-animation="fadeInLeft"
+  data-delay=".6s"
+>
+  <span
+    style="
+      position: relative;
+      z-index: 2;
+      text-shadow: 1px 1px 2px rgba(237, 233, 233, 0.942);
+    "
+  >
+    Shop Now
+  </span>
+  <span
+    class="shine"
+    style="
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      height: 100%;
+      width: 200%;
+      background: rgba(233, 218, 218, 0.966);
+      transform: skewX(-45deg);
+      transition: left 0.4s ease;
+      z-index: 1;
+    "
+  ></span>
+</a>
+
+<a
+  class="btn interactive-btn"
+  href="{% url 'product_list' %}"
+  style="
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  "
+  onmouseover="this.style.background='linear-gradient(90deg, #0056b3, #007bff)'; this.style.transform='scale(1.1)'; this.querySelector('.shine').style.left='100%';"
+  onmouseout="this.style.background='linear-gradient(90deg, #007bff, #0056b3)'; this.style.transform='scale(1)'; this.querySelector('.shine').style.left='-100%';"
+  data-animation="fadeInRight"
+  data-delay=".9s"
+>
+  <span
+    style="
+      position: relative;
+      z-index: 2;
+      text-shadow: 1px 1px 2px rgba(253, 246, 246, 0.958);
+    "
+  >
+    Category
+  </span>
+  <span
+    class="shine"
+    style="
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      height: 100%;
+      width: 200%;
+      background: rgba(233, 218, 218, 0.966);
+      transform: skewX(-45deg);
+      transition: left 0.4s ease;
+      z-index: 1;
+    "
+  ></span>
+</a>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- other slider items go here -->
+  </div>
+</section>
+<!-- slider-area end -->
+
+<!-- banner area start -->
+<section class="banner-area pt-100 box-90">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <div class="banner-2 pos-relative mb-30">
+          <a href=""
+            ><img src="{% static 'img/drone5.jpg' %}" width="900" 
+            height="600" alt=""
+          /></a>
+          <!-- <div class="banner-trend">
+            <span>Trendy Item</span>
+            <h2><a href="shop.html">New Year Trend Coming 2019</a></h2>
+          </div> -->
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="banner-2 pos-relative mb-30">
+          <a href="">
+            <img 
+              src="{% static 'img/banner/banner-2/drone1.jpg' %}" 
+              alt="" 
+              width="900" 
+              height="600"
+            />
+          </a>
+          
+          <!-- <div class="banner-look">
+            <span>Get the look</span>
+            <h2>Festive Looks</h2>
+            <img src="{% static 'img/icon/look.png' %}" alt="" />
+            <p>Your delivery of outfit ideas, updated daily</p>
+            <a href="shop.html" class="btn theme-btn">discover</a>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- slider-area end -->
+
+<!-- product-area start -->
+<section class="product-area box-90 pt-70 pb-40">
+  <div class="container-fluid">
+    <div class="row">
+      {% for product in products %}
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="single-product-item">
+          <div class="product-wrapper mb-50">
+            <div class="product-img mb-25">
+              <a href="{% url 'product_detail' product.id %}">
+                <img src="{{ product.image_1.url }}" alt="" />
+                <img class="secondary-img" src="{{ product.image_2.url }}" alt="" />
+              </a>
+              <div class="product-action text-center" style="display: flex; justify-content: center; gap: 15px; align-items: center;">
+                <form id="add-to-cart-form" action="{% url 'add_to_cart' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="product_id" value="{{ product.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" id="cart-button" style="border: none; background: none;">
+                    <i class="fas fa-shopping-cart" style="color: #2ECC71; font-size: 24px;"></i>
+                  </button>
+                </form>
+                
+                <a href="{% url 'product_detail' product.id %}" title="Quick View">
+                  <i class="fas fa-eye" style="color: #1E90FF; font-size: 24px;"></i>
+                </a>
+
+                <form action="{% url 'add_to_wishlist' %}" method="post" style="display: inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="product_id" value="{{ product.id }}">
+                  <button type="submit" style="border: none; background: none;">
+                    <i class="far fa-heart" style="color: #FF5733; font-size: 24px;"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="product-content">
+              <div class="pro-cat mb-10">
+                <a href="{% url 'product_detail' product.id %}">{{ product.subcategory }}</a>
+              </div>
+              <h3 class="product-title">
+                <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+              </h3>
+              <div class="product-meta">
+                <div class="pro-price">
+                  <span>RS {{ product.price }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- product-area end -->
+
+<!-- product-area end -->
+
+<!-- Chatbot Icon -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; font-family: 'Arial', sans-serif;">
+  <!-- Floating Chatbot Icon -->
+  <div id="chatbot-icon" onclick="toggleOptions()" style="background: rgba(0, 82, 212, 0.9); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); transition: all 0.3s ease-in-out;">
+    <i class="fas fa-comments" style="font-size: 26px;"></i>
+  </div>
+
+  <!-- Chatbot Options Menu -->
+  <div id="options" style="display: none; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); border-radius: 12px; padding: 14px; position: absolute; bottom: 75px; right: 0; min-width: 240px; text-align: left;">
+    <a href="/generate_text/" style="display: flex; align-items: center; padding: 14px; text-decoration: none; color: #222; font-weight: 600; border-radius: 8px; transition: background 0.3s ease-in-out;">
+      <i class="fas fa-brain" style="margin-right: 14px; color: #0052D4; font-size: 22px;"></i> AI Chatbot
+    </a>
+    <a href="/chatbot/" style="display: flex; align-items: center; padding: 14px; text-decoration: none; color: #222; font-weight: 600; border-radius: 8px; transition: background 0.3s ease-in-out;">
+      <i class="fas fa-shopping-cart" style="margin-right: 14px; color: #28a745; font-size: 22px;"></i> Quick Buy Bot
+    </a>
+  </div>
+</div>
+
+<script>
+  function toggleOptions() {
+    var options = document.getElementById("options");
+    options.style.display = options.style.display === "block" ? "none" : "block";
+  }
+</script>
+
+
+<!-- Include Font Awesome -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+  rel="stylesheet"
+/>
+<script>
+  function toggleOptions() {
+    var options = document.getElementById("options");
+    options.style.display = options.style.display === "block" ? "none" : "block";
+  }
+
+  // Close options if clicked outside
+  document.addEventListener("click", function(event) {
+    var chatbotContainer = document.getElementById("chatbot-container");
+    var options = document.getElementById("options");
+    if (!chatbotContainer.contains(event.target)) {
+      options.style.display = "none";
+    }
+  });
+</script>
+{% endblock %}

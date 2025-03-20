@@ -1,0 +1,72 @@
+<!-- rental_booking.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.js"></script>
+    <title>Book Your Drone</title>
+</head>
+<body>
+    <h1>Book Your Drone: {{ rental_product.product.name }}</h1>
+    <p><strong>Hourly Rate:</strong> {{ rental_product.hourly_rate }}</p>
+    <p><strong>Daily Rate:</strong> {{ rental_product.daily_rate }}</p>
+    <p><strong>Security Deposit:</strong> {{ rental_product.security_deposit }}</p>
+    <p><strong>Rental Terms:</strong> {{ rental_product.rental_terms }}</p>
+
+    <h2>Select Your Rental Period</h2>
+    <p>Please choose the start and end times for your rental:</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="start_datetime">Start Date & Time:</label>
+            <input type="text" id="start_datetime" name="start_datetime" required>
+        </div>
+        <div>
+            <label for="end_datetime">End Date & Time:</label>
+            <input type="text" id="end_datetime" name="end_datetime" required>
+        </div>
+        <p>By clicking "Confirm Booking", you agree to the rental terms.</p>
+        <button type="submit">Confirm Booking</button>
+    </form>
+
+    <p><a href="{% url 'rental_product_list' %}">Back to Rental Drones</a></p>
+
+    <script>
+        $(function() {
+            $("#start_datetime").datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0 // Prevent past dates
+            }).timepicker({
+                timeFormat: 'HH:mm',
+                interval: 30, // 30 minute intervals
+                minTime: '00:00',
+                maxTime: '23:59',
+                startTime: '00:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
+            });
+
+            $("#end_datetime").datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0 // Prevent past dates
+            }).timepicker({
+                timeFormat: 'HH:mm',
+                interval: 30, // 30 minute intervals
+                minTime: '00:00',
+                maxTime: '23:59',
+                startTime: '00:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
+            });
+        });
+    </script>
+</body>
+</html>
